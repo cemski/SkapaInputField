@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 
 enum InputFieldStates {
     case unselected, selected, success, error
@@ -139,7 +138,7 @@ struct InputField: View {
                     .overlay(
                         Button(action: {
                             self.isTextHidden.toggle()
-                        }){
+                        }) {
                             Image(systemName: isTextHidden ? "eye" : "eye.slash")
                                 .foregroundColor(.textAndIcon1)
                         }
@@ -148,30 +147,29 @@ struct InputField: View {
                     
                 } else {
                     TextField(placeholder, text: $text)
-                    
                 }
             }
             .focused($isFocused)
-            .onChange(of: isFocused, perform: { focus in
+            .onChange(of: isFocused) { focus in
                 self.inputFieldState = focus ? .selected : .unselected
-            })
+            }
             .padding(EdgeInsets(top: 11, leading: 8, bottom: 11, trailing: 8))
             .font(.body)
             .textFieldStyle(.plain)
             .background(Color.neutral1)
             .foregroundColor(.textAndIcon1)
             .overlay(
-                RoundedRectangle(cornerRadius: 6)
+                RoundedRectangle(cornerRadius: 4)
                     .stroke(self.inputFieldState.color, lineWidth: 1)
             )
-            
-            .onReceive(Just(text), perform: { text in
+            .onChange(of: text) { _ in
                 verifyInput()
-            })
+            }
         }
         .frame(height: 48)
         .padding(.bottom, 4)
     }
+
     
     private func setupBottomStack(hint: String) -> some View {
         HStack {

@@ -20,7 +20,18 @@ enum InputFieldError {
         case .unselected, .selected:
             return "Only numeric input allowed"
         case .error:
-            return "Invalid character"
+            return "Please only X characters"
+        case .success:
+            return "Success"
+        }
+    }
+    
+    func hintMessage(_ message: String, maxLength: UInt16) -> String {
+        switch self {
+        case .unselected, .selected:
+            return message
+        case .error:
+            return "Please only enter up to \(maxLength) characters"
         case .success:
             return "Success"
         }
@@ -83,148 +94,161 @@ struct InputField: View {
     @FocusState var isFocused: Bool
     @Binding var text: String
     @State var isSecure: Bool = false
-    @State var isValid: Bool? = nil
     @State var isTextHidden: Bool = true
-    @State var placeholderText: String = "Placeholder"
     @State var inputFieldState: InputFieldError = .unselected
     @State var subtitleCase: SubtitleCases = .normal
-    var maxLength = 8
+    var maxLength: UInt16 = 10
     var title: String?
-    var informationString: String?
+    var hintString: String?
+    var errorString: String?
+    var placeholder: String = ""
     
-    private func setupTopTitle() -> some View {
-        HStack {
-            Text(title ?? "Title")
-                .font(.body)
-                .foregroundColor(.textAndIcon3)
-            Spacer()
+    var body: some View {
+        VStack {
+            if let title = title {
+                setupTopStack(title: title)
+            }
+            setupInputFields()
+            if let hint = hintString {
+                setupBottomStack(hint: hint)
+            }
         }
     }
     
+    private func setupTopStack(title: String) -> some View {
+        HStack {
+            Text(title)
+                .font(.body)
+                .foregroundColor(.textAndIcon2)
+            Spacer()
+        }
+        .padding(.bottom, 2)
+    }
+    
     private func setupInputFields() -> some View {
-        Group {
-            if isSecure {
-                SecureField(placeholderText, text: $text)
+        VStack {
+            Group {
+                if isSecure {
+                    Group {
+                        if isTextHidden {
+                            SecureField(placeholder, text: $text)
+                        } else {
+                            TextField(placeholder, text: $text)
+                        }
+                    }
                     .overlay(
                         Button(action: {
                             self.isTextHidden.toggle()
                         }){
                             Image(systemName: isTextHidden ? "eye" : "eye.slash")
-                                .renderingMode(.template)
                                 .foregroundColor(.textAndIcon1)
                         }
-                            .padding(.trailing, 10), alignment: .trailing)
-            } else {
-                TextField(placeholderText, text: $text)
-                
+                            .padding(.trailing, 0),
+                        alignment: .trailing)
+                    
+                } else {
+                    TextField(placeholder, text: $text)
+                    
+                }
             }
+            .focused($isFocused)
+            .onChange(of: isFocused, perform: { focus in
+                self.inputFieldState = focus ? .selected : .unselected
+            })
+            .padding(EdgeInsets(top: 11, leading: 8, bottom: 11, trailing: 8))
+            .font(.body)
+            .textFieldStyle(.plain)
+            .background(Color.neutral1)
+            .foregroundColor(.textAndIcon1)
+            .overlay(
+                RoundedRectangle(cornerRadius: 6)
+                    .stroke(self.inputFieldState.color, lineWidth: 1)
+            )
+            
+            .onReceive(Just(text), perform: { text in
+                verifyInput()
+            })
         }
-        .focused($isFocused)
-        .onChange(of: isFocused, perform: { focus in
-            self.inputFieldState = focus ? .selected : .unselected
-        })
-        .font(.body)
-        .textFieldStyle(.roundedBorder)
-        .foregroundColor(.textAndIcon1)
-        .overlay(
-            RoundedRectangle(cornerRadius: 6)
-                .stroke(self.inputFieldState.color, lineWidth: 2)
-        )
-        
-        .onReceive(Just(text), perform: { text in
-            verifyInput()
-        })
+        .frame(height: 48)
+        .padding(.bottom, 4)
     }
     
-    private func setupBottomStack() -> some View {
+    private func setupBottomStack(hint: String) -> some View {
         HStack {
-            Group {
-                if subtitleCase != .normal {
-                    Image(systemName: subtitleCase.stateIcon ?? "cloud")
-                        .foregroundColor(subtitleCase.color)
-                }
-                
-                Text(inputFieldState.message)
+            if subtitleCase != .normal {
+                Image(systemName: subtitleCase.stateIcon ?? "")
+                    .foregroundColor(subtitleCase.color)
+            }
+                Text(inputFieldState.hintMessage(hint, maxLength: maxLength))
                     .foregroundColor(subtitleCase.color)
                     .font(.caption)
-            }
+                    .lineSpacing(22)
             Spacer()
-            
-            if text.count < maxLength {
-                Text("\(text.count)/\(maxLength)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+            if maxLength > 0 {
+                if text.count < maxLength {
+                    Text("\(text.count)/\(maxLength)")
+                        .font(.caption)
+                        .foregroundColor(.textAndIcon3)
+                }
             }
         }
-    }
-    
-    var body: some View {
-        VStack {
-            setupTopTitle()
-            setupInputFields()
-            setupBottomStack()
-        }
+//        .padding(.top, 4)
     }
     
     private func verifyInput() {
-        if text.count < maxLength {
-            
+        guard maxLength > 0 else {
+            return
         }
-        //        let filtered = text.filter {
-        //            $0.isNumber
-        //        }
-        //        if text.count < maxLength {
-        //            inputFieldState = InputFieldError.selected
-        //            subtitleCase = SubtitleCases.normal
-        //        }
         
-        if text.count > 0 && !isNumeric(string: text) {
-            inputFieldState = InputFieldError.error
-            subtitleCase = SubtitleCases.error
+        if text.count < maxLength {
+            inputFieldState = isFocused ? .selected : .unselected
+            subtitleCase = .normal
+        }
+        
+        if text.count > maxLength {
+            inputFieldState = .error
+            subtitleCase = .error
         }
         
         if text.count == maxLength {
-            inputFieldState = InputFieldError.success
-            subtitleCase = SubtitleCases.success
-        }
-    }
-    
-    func isNumeric(string: String) -> Bool {
-        return !string.isEmpty && string.range(of: "^[0-9]*$", options: .regularExpression) != nil
-    }
-    
-    private func submitInput() {
-        if text.count < maxLength {
-            inputFieldState = InputFieldError.error
-            
-        } else if text.contains("CHARACTERS") {
-            inputFieldState = InputFieldError.error
-            
-        } else {
-            inputFieldState = InputFieldError.success
+            inputFieldState = .success
+            subtitleCase = .success
         }
     }
 }
+
+
 
 struct InputPreview: View {
     @State private var text: String = ""
     @State private var pass: String = ""
     
     var body: some View {
-        VStack {
-            InputField(text: $text, title: "Username", informationString: "Only numeric input allowed")
-            InputField(text: $pass, isSecure: true, title: "Pin")
+        ZStack{
+            Color.neutral1.ignoresSafeArea()
+            VStack {
+                InputField(text: $text, title: "Username")
+                InputField(text: $pass, isSecure: true, maxLength: 10, title: "Pin", hintString: "Only numeric input allowed")
+            }
+            .padding(30)
         }
-        .padding(30)
     }
 }
-
 
 struct InputField_Previews: PreviewProvider {
     static var previews: some View {
         InputPreview()
-        
+            .previewDisplayName("Standard")
+        InputPreview()
+            .environment(\.colorScheme, .dark)
+            .previewDisplayName("Dark")
         InputPreview()
             .environment(\.layoutDirection, .rightToLeft)
+            .previewDisplayName("RTL")
+        InputPreview()
+            .environment(\.colorScheme, .dark)
+            .environment(\.layoutDirection, .rightToLeft)
+            .previewDisplayName("RTL Dark")
+        
     }
 }

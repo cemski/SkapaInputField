@@ -14,11 +14,10 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Divider()
                 Group {
                     
                     InputField(text: $username, title: "Username")
-                    InputField(text: $password, isSecure: true, title: "Pin", informationString: "Please only enter up to 8 characters")
+                    InputField(text: $password, isSecure: true, title: "Pin", hintString: "Please only enter up to 8 characters")
                     
                 }
                 Spacer()

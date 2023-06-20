@@ -15,7 +15,7 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 InputField(text: $username, title: "Username")
-                InputField(text: $password, isSecure: true, maxLength: 8, title: "Pin", hintString: "Only numeric input allowed")
+                InputField(text: $password, isSecure: true, maxLength: 8, title: "Pin", promptString: "Only numeric input allowed")
                 Spacer()
                 LoginButton(action: {
                     print("logged in")
@@ -26,6 +26,7 @@ struct ContentView: View {
             .navigationTitle("InputField Demo")
             .navigationBarTitleDisplayMode(.inline)
             .padding(EdgeInsets(top: 30, leading: 33, bottom: 0, trailing: 33))
+            .background(Color.neutral1)
         }
     }
 }

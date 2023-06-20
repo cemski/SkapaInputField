@@ -7,78 +7,6 @@
 
 import SwiftUI
 
-/// Enum defining different states for the input field.
-enum InputFieldStates {
-    /// Represents the unselected state.
-    case unselected
-    /// Represents the selected state.
-    case selected
-    /// Represents the error state.
-    case error
-    /// Represents the success state.
-    case success
-    
-    /// Returns the hint message based on the state, the error state uses the maximum length assigned by the input parameter.
-    func hintMessage(_ message: String, maxLength: UInt16) -> String {
-        switch self {
-        case .unselected, .selected:
-            return message
-        case .error:
-            return "Please only enter up to \(maxLength) characters"
-        case .success:
-            return "Success"
-        }
-    }
-    
-    /// Returns the color associated with each state.
-    var color: Color {
-        switch self {
-        case .unselected:
-            return .neutral5
-        case .selected:
-            return .interactiveEmphasisedBgDefault
-        case .error:
-            return .semanticNegative
-        case .success:
-            return .semanticPositive
-        }
-    }
-}
-
-/// Enum defining different hint states for the input field.
-enum HintStates {
-        /// Represents the normal hint state.
-        case normal
-        /// Represents the error hint state.
-        case error
-        /// Represents the success hint state.
-        case success
-    
-    /// Returns the color associated with each hint state.
-    var color: Color {
-        switch self {
-        case .normal:
-            return .textAndIcon3
-        case .error:
-            return .semanticNegative
-        case .success:
-            return .semanticPositive
-        }
-    }
-    
-    /// Returns a preset symbol, if available, associated with each hint state.
-    var stateSymbolString: String {
-        switch self {
-        case .normal:
-            return ""
-        case .error:
-            return "exclamationmark.circle.fill"
-        case .success:
-            return "checkmark.circle.fill"
-        }
-    }
-}
-
 struct InputField: View {
     // State Variables
     /// A boolean value that determines if the InputField is currently in focus.
@@ -95,7 +23,6 @@ struct InputField: View {
     @State var isTextHidden: Bool = true
     /// A custom enum (TextEntryStates) which sets the
     @State var inputFieldState: InputFieldStates = .unselected
-    @State var subtitleCase: HintStates = .normal
     
     // Other properties
     /// A UInt16 value that determines the maximum characters allowed for input.
@@ -106,8 +33,8 @@ struct InputField: View {
     ///
     /// This property is optional in case there isn't a need for a title. By not supplying a title, the top row will not be rendered.
     var title: String?
-    /// A string that is displayed as the hint message for the InputField, helpful for explaining any restrictions that may apply.
-    var hintString: String?
+    /// A string that is displayed as the prompt message for the InputField, helpful for explaining any restrictions that may apply.
+    var promptString: String?
     /// A string that is displayed as the error message for the InputField, helpful for explaining that the user has made an input that is not allowed.
     var errorString: String?
     /// A string value that can be to give the user a suggestion on what an input should look like.
@@ -119,7 +46,7 @@ struct InputField: View {
         VStack {
             setupTopStack(title: title)
             setupInputFields()
-            setupBottomStack(hint: hintString)
+            setupBottomStack(prompt: promptString)
         }
     }
     
@@ -132,9 +59,9 @@ struct InputField: View {
     private func setupTopStack(title: String?) -> some View {
         HStack {
             if let title = title {
-            Text(title)
-                .font(.bodyM)
-                .foregroundColor(.textAndIcon2)
+                Text(title)
+                    .font(.bodyM)
+                    .foregroundColor(.textAndIcon2)
             }
             Spacer()
         }
@@ -147,24 +74,25 @@ struct InputField: View {
     private func setupInputFields() -> some View {
         HStack {
             determineInputField()
-            .focused($isFocused)
-            .onChange(of: isFocused) { focus in
-                if !(inputFieldState == .error) && !(inputFieldState == .success)  {
-                    self.inputFieldState = focus ? .selected : .unselected
+                .focused($isFocused)
+                .onChange(of: isFocused) { focus in
+                    if !(inputFieldState == .error) && !(inputFieldState == .success)  {
+                        self.inputFieldState = focus ? .selected : .unselected
+                    }
                 }
-            }
-            .onChange(of: text) { _ in
-                verifyInput()
-            }
-            .padding(EdgeInsets(top: 11, leading: 8, bottom: 11, trailing: 8))
-            .font(.bodyL)
-            .textFieldStyle(.plain)
-            .background(Color.neutral1)
-            .foregroundColor(.textAndIcon1)
-            .overlay(
-                RoundedRectangle(cornerRadius: 4)
-                    .stroke(self.inputFieldState.color, lineWidth: isFocused ? 2 : 1)
-            )
+                .onChange(of: text) { _ in
+                    verifyInput()
+                }
+                .frame(maxWidth: .infinity, maxHeight: 26 * scale)
+                .padding(EdgeInsets(top: 11, leading: 8, bottom: 11, trailing: 8))
+                .font(.bodyL)
+                .textFieldStyle(.plain)
+                .background(Color.neutral1)
+                .foregroundColor(.textAndIcon1)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(self.inputFieldState.borderColor, lineWidth: isFocused ? 2 : 1)
+                )
         }
         .padding(.bottom, 4)
     }
@@ -173,17 +101,18 @@ struct InputField: View {
         Group {
             if isSecure {
                 HStack {
-                        if isTextHidden {
-                            SecureField(placeholder, text: $text)
-                                .accessibilityIdentifier("password")
-                        } else {
-                            TextField(placeholder, text: $text)
-                                .accessibilityIdentifier("visiblePassword")
-                        }
+                    if isTextHidden {
+                        SecureField(placeholder, text: $text)
+                            .accessibilityIdentifier("password")
+                    } else {
+                        TextField(placeholder, text: $text)
+                            .accessibilityIdentifier("visiblePassword")
+                    }
                     Button(action: {
                         self.isTextHidden.toggle()
                     }, label: {
-                        Image(systemName: isTextHidden ? "eye" : "eye.slash")
+                        Image(isTextHidden ? "eye" : "eye.slash")
+                            .renderingMode(.template)
                             .foregroundColor(.textAndIcon1)
                     })
                     .accessibilityIdentifier("visibilityButton")
@@ -195,31 +124,47 @@ struct InputField: View {
             }
         }
     }
-
+    
     /// A private helper method the split up the views in smaller, more readable and maintainable sections.
     ///
     /// - Parameters:
-    ///  - Parameter hint (Optional): The hint message for the bottom-left view in the InputField.
+    ///  - Parameter prompt (Optional): The prompt message for the bottom-left view in the InputField.
     ///
-    /// - Returns: An assembled HStack containing a hint (if there is one) and a character counter if the maxLength property has a positive value.
-    private func setupBottomStack(hint: String?) -> some View {
-        HStack {
-            if let hint = hintString {
+    /// - Returns: An assembled HStack containing a prompt (if there is one) and a character counter if the maxLength property has a positive value.
+    
+    @ScaledMetric var scale: CGFloat = 1
+    private func setupBottomStack(prompt: String?) -> some View {
+        HStack(alignment: .center, spacing: 0) {
+            if let prompt = promptString {
                 
-            if subtitleCase != .normal  && !(subtitleCase.stateSymbolString.isEmpty) {
-                Image(systemName: subtitleCase.stateSymbolString)
-                    .foregroundColor(subtitleCase.color)
-            }
-                Text(inputFieldState.hintMessage(hint, maxLength: maxLength))
-                    .foregroundColor(subtitleCase.color)
-                    .font(.bodyS)
+                Label {
+                    Text(inputFieldState.promptMessage(prompt, maxLength: maxLength))
+                        .font(.bodyS)
+                        .foregroundColor(inputFieldState.promptColor)
+                } icon: {
+                    if inputFieldState != .selected  && !(inputFieldState.promptImageString.isEmpty) {
+                        ZStack(alignment: .center) {
+                            
+                            Circle()
+                                .fill(inputFieldState.promptColor)
+                                .frame(width: 16 * scale, height: 16 * scale)
+                                .padding(2)
+                            Image(inputFieldState.promptImageString)
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundColor(.textAndIcon5)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 10 * scale, height: 10 * scale)
+                        }
+                    }
+                }
             }
             Spacer()
             if maxLength > 0  && text.count < maxLength {
-                    Text("\(text.count)/\(maxLength)")
+                Text("\(text.count)/\(maxLength)")
                     .accessibilityIdentifier("counter")
-                        .font(.bodyS)
-                        .foregroundColor(.textAndIcon3)
+                    .font(.bodyS)
+                    .foregroundColor(.textAndIcon3)
             }
         }
     }
@@ -231,20 +176,20 @@ struct InputField: View {
         guard maxLength > 0 else {
             return
         }
+        if text.contains("^[a-zA-Z]*$") {
+            inputFieldState = .error
+        }
         
         if text.count < maxLength {
             inputFieldState = isFocused ? .selected : .unselected
-            subtitleCase = .normal
         }
         
         if text.count > maxLength {
             inputFieldState = .error
-            subtitleCase = .error
         }
         
         if text.count == maxLength {
             inputFieldState = .success
-            subtitleCase = .success
         }
     }
 }
@@ -256,14 +201,13 @@ struct InputPreview: View {
     @State private var pass: String = ""
     
     var body: some View {
-        ZStack{
-            Color.neutral1.ignoresSafeArea()
-            VStack {
-                InputField(text: $text, title: "Username")
-                InputField(text: $pass, isSecure: true, maxLength: 10, title: "Pin", hintString: "Only numeric input allowed")
-            }
-            .padding(30)
+        VStack {
+            InputField(text: $text, title: "Username")
+            InputField(text: $pass, isSecure: true, maxLength: 10, title: "Pin", promptString: "Only numeric input allowed")
+            Spacer()
         }
+        .padding(30)
+        .background(Color.neutral1)
     }
 }
 
@@ -282,5 +226,68 @@ struct InputField_Previews: PreviewProvider {
             .environment(\.layoutDirection, .rightToLeft)
             .previewDisplayName("RTL Dark")
         
+    }
+}
+
+
+/// Enum defining different states for the input field.
+enum InputFieldStates {
+    /// Represents the unselected state.
+    case unselected
+    /// Represents the selected state.
+    case selected
+    /// Represents the error state.
+    case error
+    /// Represents the success state.
+    case success
+    
+    /// Returns the prompt message based on the state, the error state uses the maximum length assigned by the input parameter.
+    func promptMessage(_ message: String, maxLength: UInt16) -> String {
+        switch self {
+        case .unselected, .selected:
+            return message
+        case .error:
+            return "Please only enter up to \(maxLength) characters"
+        case .success:
+            return "Success"
+        }
+    }
+    
+    /// Returns the color associated with each state.
+    var borderColor: Color {
+        switch self {
+        case .unselected:
+            return .neutral5
+        case .selected:
+            return .interactiveEmphasisedBgDefault
+        case .error:
+            return .semanticNegative
+        case .success:
+            return .semanticPositive
+        }
+    }
+    
+    /// Returns the color associated with each prompt state.
+    var promptColor: Color {
+        switch self {
+        case .unselected, .selected:
+            return .textAndIcon3
+        case .error:
+            return .semanticNegative
+        case .success:
+            return .semanticPositive
+        }
+    }
+    
+    /// Returns a preset symbol, if available, associated with each prompt state.
+    var promptImageString: String {
+        switch self {
+        case .unselected, .selected:
+            return ""
+        case .error:
+            return "notice"
+        case .success:
+            return "checkmark"
+        }
     }
 }

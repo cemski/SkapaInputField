@@ -14,25 +14,18 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Group {
-                    
-                    InputField(text: $username, title: "Username")
-                    InputField(text: $password, isSecure: true, title: "Pin", hintString: "Please only enter up to 8 characters")
-                    
-                }
+                InputField(text: $username, title: "Username")
+                InputField(text: $password, isSecure: true, maxLength: 8, title: "Pin", hintString: "Only numeric input allowed")
                 Spacer()
-                Button("Login") {}
-                    .buttonStyle(.plain)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 55)
-                    .overlay(
-                        Capsule(style: .circular)
-                            .stroke(.black, style: StrokeStyle(lineWidth: 1))
-                    )
+                LoginButton(action: {
+                    print("logged in")
+                }, title: "Login")
+                    .accessibilityIdentifier("loginButton")
+                    
             }
             .navigationTitle("InputField Demo")
             .navigationBarTitleDisplayMode(.inline)
-            .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
+            .padding(EdgeInsets(top: 30, leading: 33, bottom: 0, trailing: 33))
         }
     }
 }
@@ -40,5 +33,16 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .previewDisplayName("Standard")
+        ContentView()
+            .environment(\.colorScheme, .dark)
+            .previewDisplayName("Dark")
+        ContentView()
+            .environment(\.layoutDirection, .rightToLeft)
+            .previewDisplayName("RTL")
+        ContentView()
+            .environment(\.colorScheme, .dark)
+            .environment(\.layoutDirection, .rightToLeft)
+            .previewDisplayName("RTL Dark")
     }
 }

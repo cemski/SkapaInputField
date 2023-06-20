@@ -16,6 +16,7 @@ extension Color {
     public static let textAndIcon1 = Color("text-and-icon-1")
     public static let textAndIcon2 = Color("text-and-icon-2")
     public static let textAndIcon3 = Color("text-and-icon-3")
+    public static let textAndIcon5 = Color("text-and-icon-5")
 }
 
 

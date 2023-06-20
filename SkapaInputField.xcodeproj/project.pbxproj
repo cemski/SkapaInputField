@@ -10,6 +10,7 @@
 		713EEB2D2A41D87D00C001FD /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713EEB2C2A41D87D00C001FD /* ViewModel.swift */; };
 		713EEB2E2A41D96B00C001FD /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36752A3A020C000D5C3F /* InputField.swift */; };
 		713EEB302A41DE1400C001FD /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713EEB2F2A41DE1400C001FD /* LoginButton.swift */; };
+		713EEB322A41F0AF00C001FD /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713EEB312A41F0AF00C001FD /* Font+Extension.swift */; };
 		718F364A2A3A01C4000D5C3F /* SkapaInputFieldApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36492A3A01C4000D5C3F /* SkapaInputFieldApp.swift */; };
 		718F364E2A3A01C5000D5C3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718F364D2A3A01C5000D5C3F /* Assets.xcassets */; };
 		718F36512A3A01C5000D5C3F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718F36502A3A01C5000D5C3F /* Preview Assets.xcassets */; };
@@ -17,7 +18,7 @@
 		718F36652A3A01C5000D5C3F /* SkapaInputFieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36642A3A01C5000D5C3F /* SkapaInputFieldUITests.swift */; };
 		718F36672A3A01C5000D5C3F /* SkapaInputFieldUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36662A3A01C5000D5C3F /* SkapaInputFieldUITestsLaunchTests.swift */; };
 		718F36762A3A020C000D5C3F /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36752A3A020C000D5C3F /* InputField.swift */; };
-		718F36782A3A370C000D5C3F /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36772A3A370C000D5C3F /* UIColor+Extension.swift */; };
+		718F36782A3A370C000D5C3F /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36772A3A370C000D5C3F /* Color+Extension.swift */; };
 		718F367A2A3A4DB7000D5C3F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36792A3A4DB7000D5C3F /* ContentView.swift */; };
 		71F0E7872A3FB2BB00C2550A /* NotoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71F0E7852A3FB2BA00C2550A /* NotoSans-Regular.ttf */; };
 		71F0E7882A3FB2BB00C2550A /* NotoSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71F0E7862A3FB2BB00C2550A /* NotoSans-Bold.ttf */; };
@@ -43,6 +44,7 @@
 /* Begin PBXFileReference section */
 		713EEB2C2A41D87D00C001FD /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		713EEB2F2A41DE1400C001FD /* LoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
+		713EEB312A41F0AF00C001FD /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		718F36462A3A01C4000D5C3F /* SkapaInputField.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkapaInputField.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		718F36492A3A01C4000D5C3F /* SkapaInputFieldApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkapaInputFieldApp.swift; sourceTree = "<group>"; };
 		718F364D2A3A01C5000D5C3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -53,7 +55,7 @@
 		718F36642A3A01C5000D5C3F /* SkapaInputFieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkapaInputFieldUITests.swift; sourceTree = "<group>"; };
 		718F36662A3A01C5000D5C3F /* SkapaInputFieldUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkapaInputFieldUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		718F36752A3A020C000D5C3F /* InputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
-		718F36772A3A370C000D5C3F /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		718F36772A3A370C000D5C3F /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		718F36792A3A4DB7000D5C3F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		71F0E7852A3FB2BA00C2550A /* NotoSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSans-Regular.ttf"; sourceTree = "<group>"; };
 		71F0E7862A3FB2BB00C2550A /* NotoSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSans-Bold.ttf"; sourceTree = "<group>"; };
@@ -114,7 +116,8 @@
 				718F36792A3A4DB7000D5C3F /* ContentView.swift */,
 				713EEB2F2A41DE1400C001FD /* LoginButton.swift */,
 				718F364D2A3A01C5000D5C3F /* Assets.xcassets */,
-				718F36772A3A370C000D5C3F /* UIColor+Extension.swift */,
+				718F36772A3A370C000D5C3F /* Color+Extension.swift */,
+				713EEB312A41F0AF00C001FD /* Font+Extension.swift */,
 				713EEB2C2A41D87D00C001FD /* ViewModel.swift */,
 				71F0E7862A3FB2BB00C2550A /* NotoSans-Bold.ttf */,
 				71F0E7852A3FB2BA00C2550A /* NotoSans-Regular.ttf */,
@@ -281,7 +284,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				713EEB302A41DE1400C001FD /* LoginButton.swift in Sources */,
-				718F36782A3A370C000D5C3F /* UIColor+Extension.swift in Sources */,
+				718F36782A3A370C000D5C3F /* Color+Extension.swift in Sources */,
+				713EEB322A41F0AF00C001FD /* Font+Extension.swift in Sources */,
 				718F364A2A3A01C4000D5C3F /* SkapaInputFieldApp.swift in Sources */,
 				718F367A2A3A4DB7000D5C3F /* ContentView.swift in Sources */,
 				718F36762A3A020C000D5C3F /* InputField.swift in Sources */,

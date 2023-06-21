@@ -7,9 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		710053E42A43904F00A2890E /* InputFieldStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710053E32A43904F00A2890E /* InputFieldStates.swift */; };
+		710053E92A43917100A2890E /* InputFieldStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710053E32A43904F00A2890E /* InputFieldStates.swift */; };
+		710053EA2A43917400A2890E /* InputFieldStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710053E32A43904F00A2890E /* InputFieldStates.swift */; };
 		713EEB2E2A41D96B00C001FD /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36752A3A020C000D5C3F /* InputField.swift */; };
 		713EEB302A41DE1400C001FD /* LoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713EEB2F2A41DE1400C001FD /* LoginButton.swift */; };
 		713EEB322A41F0AF00C001FD /* Font+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713EEB312A41F0AF00C001FD /* Font+Extension.swift */; };
+		71653E3E2A4391F000DF2317 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36772A3A370C000D5C3F /* Color+Extension.swift */; };
+		71653E3F2A4391F000DF2317 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36772A3A370C000D5C3F /* Color+Extension.swift */; };
 		718F364A2A3A01C4000D5C3F /* SkapaInputFieldApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718F36492A3A01C4000D5C3F /* SkapaInputFieldApp.swift */; };
 		718F364E2A3A01C5000D5C3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718F364D2A3A01C5000D5C3F /* Assets.xcassets */; };
 		718F36512A3A01C5000D5C3F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 718F36502A3A01C5000D5C3F /* Preview Assets.xcassets */; };
@@ -41,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		710053E32A43904F00A2890E /* InputFieldStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFieldStates.swift; sourceTree = "<group>"; };
 		713EEB2F2A41DE1400C001FD /* LoginButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButton.swift; sourceTree = "<group>"; };
 		713EEB312A41F0AF00C001FD /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		718F36462A3A01C4000D5C3F /* SkapaInputField.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SkapaInputField.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,7 +63,7 @@
 		718F36792A3A4DB7000D5C3F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		71F0E7852A3FB2BA00C2550A /* NotoSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSans-Regular.ttf"; sourceTree = "<group>"; };
 		71F0E7862A3FB2BB00C2550A /* NotoSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSans-Bold.ttf"; sourceTree = "<group>"; };
-		71F0E7892A3FB2E700C2550A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		71F0E7892A3FB2E700C2550A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +91,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		710053E52A43908600A2890E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				718F36772A3A370C000D5C3F /* Color+Extension.swift */,
+				713EEB312A41F0AF00C001FD /* Font+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		710053E62A4390A000A2890E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				710053E32A43904F00A2890E /* InputFieldStates.swift */,
+				718F364D2A3A01C5000D5C3F /* Assets.xcassets */,
+				71F0E7862A3FB2BB00C2550A /* NotoSans-Bold.ttf */,
+				71F0E7852A3FB2BA00C2550A /* NotoSans-Regular.ttf */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		710053E72A4390E900A2890E /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				71F0E7892A3FB2E700C2550A /* Info.plist */,
+				718F36492A3A01C4000D5C3F /* SkapaInputFieldApp.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		710053E82A4390FE00A2890E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				718F36792A3A4DB7000D5C3F /* ContentView.swift */,
+				718F36752A3A020C000D5C3F /* InputField.swift */,
+				713EEB2F2A41DE1400C001FD /* LoginButton.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		718F363D2A3A01C4000D5C3F = {
 			isa = PBXGroup;
 			children = (
@@ -108,16 +153,10 @@
 		718F36482A3A01C4000D5C3F /* SkapaInputField */ = {
 			isa = PBXGroup;
 			children = (
-				71F0E7892A3FB2E700C2550A /* Info.plist */,
-				718F36492A3A01C4000D5C3F /* SkapaInputFieldApp.swift */,
-				718F36752A3A020C000D5C3F /* InputField.swift */,
-				718F36792A3A4DB7000D5C3F /* ContentView.swift */,
-				713EEB2F2A41DE1400C001FD /* LoginButton.swift */,
-				718F36772A3A370C000D5C3F /* Color+Extension.swift */,
-				713EEB312A41F0AF00C001FD /* Font+Extension.swift */,
-				718F364D2A3A01C5000D5C3F /* Assets.xcassets */,
-				71F0E7862A3FB2BB00C2550A /* NotoSans-Bold.ttf */,
-				71F0E7852A3FB2BA00C2550A /* NotoSans-Regular.ttf */,
+				710053E72A4390E900A2890E /* Application */,
+				710053E82A4390FE00A2890E /* View */,
+				710053E52A43908600A2890E /* Extensions */,
+				710053E62A4390A000A2890E /* Resources */,
 				718F364F2A3A01C5000D5C3F /* Preview Content */,
 			);
 			path = SkapaInputField;
@@ -285,6 +324,7 @@
 				713EEB322A41F0AF00C001FD /* Font+Extension.swift in Sources */,
 				718F364A2A3A01C4000D5C3F /* SkapaInputFieldApp.swift in Sources */,
 				718F367A2A3A4DB7000D5C3F /* ContentView.swift in Sources */,
+				710053E42A43904F00A2890E /* InputFieldStates.swift in Sources */,
 				718F36762A3A020C000D5C3F /* InputField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,7 +334,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				718F365B2A3A01C5000D5C3F /* SkapaInputFieldTests.swift in Sources */,
+				710053E92A43917100A2890E /* InputFieldStates.swift in Sources */,
 				713EEB2E2A41D96B00C001FD /* InputField.swift in Sources */,
+				71653E3F2A4391F000DF2317 /* Color+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,7 +345,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				718F36652A3A01C5000D5C3F /* SkapaInputFieldUITests.swift in Sources */,
+				710053EA2A43917400A2890E /* InputFieldStates.swift in Sources */,
 				718F36672A3A01C5000D5C3F /* SkapaInputFieldUITestsLaunchTests.swift in Sources */,
+				71653E3E2A4391F000DF2317 /* Color+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,7 +492,7 @@
 				DEVELOPMENT_TEAM = P9UPD7VA24;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SkapaInputField/Info.plist;
+				INFOPLIST_FILE = SkapaInputField/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -478,7 +522,7 @@
 				DEVELOPMENT_TEAM = P9UPD7VA24;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SkapaInputField/Info.plist;
+				INFOPLIST_FILE = SkapaInputField/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

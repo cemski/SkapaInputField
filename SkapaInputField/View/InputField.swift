@@ -35,7 +35,7 @@ import SwiftUI
 ///
 ///
 struct InputField: View {
-    // --MARK: State Variables
+    // State Variables
     /// A binding string that the InputField displays.
     @Binding var text: String
     /// A boolean value that determines if the InputField is currently in focus.
@@ -51,7 +51,7 @@ struct InputField: View {
     /// A custom enum (TextEntryStates) which sets the
     @Binding var state: InputFieldStates
     
-    // --MARK: Other properties
+    // Other properties
     /// A UInt16 value that determines the maximum characters allowed for input.
     ///
     /// This property is set to 0 by default. This will cause the InputField not to  trigger any other states than the selected and unselected states.
@@ -83,6 +83,7 @@ struct InputField: View {
         self.title = title
         self.promptString = promptString
     }
+    
     var body: some View {
         VStack {
             setupTopStack(title: title)
@@ -109,12 +110,6 @@ struct InputField: View {
         .padding(.bottom, 2)
     }
     
-    func adjustFocus(focus: Bool) {
-        if !(state == .error) && !(state == .success)  {
-            state = focus ? .selected : .unselected
-        }
-    }
-    
     /// A private helper method the split up the views in smaller, more readable and maintainable sections.
     ///
     /// - Returns: An assembled HStack for the InputField itself.
@@ -126,7 +121,7 @@ struct InputField: View {
                     adjustFocus(focus: focus)
                 }
                 .onChange(of: text) { _ in
-                    verifyInput()
+                    validateInput()
                 }
                 .frame(maxWidth: .infinity, minHeight: 26)
                 .padding(EdgeInsets(top: 11, leading: 8, bottom: 11, trailing: 8))
@@ -142,6 +137,9 @@ struct InputField: View {
         .padding(.bottom, 4)
     }
     
+    /// A private helper method to determine if a TextField or SecureField is to be used depending on the variables set for the InputField.
+    ///
+    /// - Returns: The desired type of Textfield/SecureField
     private func determineInputField() -> some View {
         Group {
             if isSecure {
@@ -212,10 +210,15 @@ struct InputField: View {
         }
     }
     
-    /// Default verification for the InputField.
-    ///
-    /// Triggers different states depending on the input count compared to the maxLength provided (default is 0).
-    func verifyInput() {
+    /// Sets the current state to selected or unselected if the InputField isn't displaying an error/success state.
+    func adjustFocus(focus: Bool) {
+        if !(state == .error) && !(state == .success)  {
+            state = focus ? .selected : .unselected
+        }
+    }
+    
+    /// Default verification for the InputField. Triggers different states depending on the input count compared to the maxLength provided (default is 0).
+    func validateInput() {
         guard maxLength > 0 else {
             state = .selected
             return
@@ -228,7 +231,6 @@ struct InputField: View {
         
         if text.count < maxLength {
             state = isFocused ? .selected : .unselected
-//            inputFieldState = .selected
         }
         
         if text.count > maxLength {
@@ -282,68 +284,5 @@ struct InputField_Previews: PreviewProvider {
             .environment(\.layoutDirection, .rightToLeft)
             .previewDisplayName("RTL Dark")
         
-    }
-}
-
-
-/// Enum defining different states for the input field.
-enum InputFieldStates {
-    /// Represents the unselected state.
-    case unselected
-    /// Represents the selected state.
-    case selected
-    /// Represents the error state.
-    case error
-    /// Represents the success state.
-    case success
-    
-    /// Returns the prompt message based on the state, the error state uses the maximum length assigned by the input parameter.
-    func promptMessage(_ message: String, maxLength: UInt16) -> String {
-        switch self {
-        case .unselected, .selected:
-            return message
-        case .error:
-            return "Please only enter up to \(maxLength) characters"
-        case .success:
-            return "Success"
-        }
-    }
-    
-    /// Returns the color associated with each state.
-    var borderColor: Color {
-        switch self {
-        case .unselected:
-            return .neutral5
-        case .selected:
-            return .interactiveEmphasisedBgDefault
-        case .error:
-            return .semanticNegative
-        case .success:
-            return .semanticPositive
-        }
-    }
-    
-    /// Returns the color associated with each prompt state.
-    var promptColor: Color {
-        switch self {
-        case .unselected, .selected:
-            return .textAndIcon3
-        case .error:
-            return .semanticNegative
-        case .success:
-            return .semanticPositive
-        }
-    }
-    
-    /// Returns a preset symbol, if available, associated with each prompt state.
-    var promptImageString: String {
-        switch self {
-        case .unselected, .selected:
-            return ""
-        case .error:
-            return "notice"
-        case .success:
-            return "checkmark"
-        }
     }
 }

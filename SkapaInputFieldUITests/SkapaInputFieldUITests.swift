@@ -21,8 +21,7 @@ final class SkapaInputFieldUITests: XCTestCase {
         app = nil
     }
     
-    /// Test if the app toggles the visibility for the InputField
-    ///
+    /// Test if the visibility is toggled correctly for the secure entry version of the InputField.
     func testInputFieldVisibilityButton() {
         let visibilityButton = app.buttons["visibilityButton"]
         let usernameTextfield = app.textFields["username"]
@@ -49,6 +48,7 @@ final class SkapaInputFieldUITests: XCTestCase {
         
     }
     
+    /// Test if the character counter shows the correct information and disappears if the limit is equal to or greater than the requirement.
     func testInputFieldCharacterCount() {
         let passwordSecureField = app.secureTextFields["password"]
         let counter = app.staticTexts["counter"]
@@ -63,7 +63,8 @@ final class SkapaInputFieldUITests: XCTestCase {
         XCTAssertFalse(counter.exists)
     }
     
-    func testHintMessageStates() {
+    /// Test if the prompt is successfully set depending on the scenario. The test goes through all of the states.
+    func testPromptMessageStates() {
         let passwordSecureTextField = app.secureTextFields["password"]
         let hintStaticText = app.staticTexts["Only numeric input allowed"]
         let successStaticText = app.staticTexts["Success"]

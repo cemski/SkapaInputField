@@ -16,13 +16,21 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                InputField(text: $username, isSecure: false, state: $usernameState, title: "Username", maxLength: 0)
-                InputField(text: $password, isSecure: true, state: $passwordState, title: "Pin", promptString: "Only numeric input allowed", maxLength: 8)
+                InputField(text: $username,
+                           isSecure: false,
+                           state: $usernameState,
+                           title: "Username",
+                           maxLength: 0)
+                InputField(text: $password,
+                           isSecure: true,
+                           state: $passwordState,
+                           title: "Pin",
+                           promptString: "Only numeric input allowed",
+                           maxLength: 8)
                 Spacer()
                 LoginButton(action: {
                     print("Begin login process")
                 }, title: "Login")
-                    .accessibilityIdentifier("loginButton")
                     
             }
             .navigationTitle("InputField Demo")

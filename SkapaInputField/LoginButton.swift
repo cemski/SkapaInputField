@@ -42,7 +42,7 @@ struct LoginButton<Content: View>: View {
 struct LoginButton_Previews: PreviewProvider {
     static var previews: some View {
         LoginButton(action: {
-            print("ok")
+            print("Login process")
             
         }, title: "Login")
         .padding(.horizontal, 30)

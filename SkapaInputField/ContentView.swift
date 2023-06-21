@@ -10,15 +10,17 @@ import SwiftUI
 struct ContentView: View {
     @State private var username: String = ""
     @State private var password: String = ""
+    @State var usernameState = InputFieldStates.unselected
+    @State var passwordState = InputFieldStates.unselected
     
     var body: some View {
         NavigationView {
             VStack {
-                InputField(text: $username, title: "Username")
-                InputField(text: $password, isSecure: true, maxLength: 8, title: "Pin", promptString: "Only numeric input allowed")
+                InputField(text: $username, isSecure: false, state: $usernameState, title: "Username", maxLength: 0)
+                InputField(text: $password, isSecure: true, state: $passwordState, title: "Pin", promptString: "Only numeric input allowed", maxLength: 8)
                 Spacer()
                 LoginButton(action: {
-                    print("logged in")
+                    print("Begin login process")
                 }, title: "Login")
                     .accessibilityIdentifier("loginButton")
                     

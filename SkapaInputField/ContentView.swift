@@ -11,14 +11,17 @@ struct ContentView: View {
     @State private var username: String = ""
     @State private var password: String = ""
     
+    private var usernameModel = InputFieldModel(text: "", title: "Username")
+    private var passModel = InputFieldModel(text: "", isSecure: true, maxLength: 8, title: "Pin", promptString: "Only numeric input allowed")
+    
     var body: some View {
         NavigationView {
             VStack {
-                InputField(text: $username, title: "Username")
-                InputField(text: $password, isSecure: true, maxLength: 8, title: "Pin", promptString: "Only numeric input allowed")
+                InputField(model: usernameModel)
+                InputField(model: passModel)
                 Spacer()
                 LoginButton(action: {
-                    print("logged in")
+                    
                 }, title: "Login")
                     .accessibilityIdentifier("loginButton")
                     

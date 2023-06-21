@@ -8,45 +8,22 @@
 import SwiftUI
 
 struct InputField: View {
-    // State Variables
     /// A boolean value that determines if the InputField is currently in focus.
     @FocusState var isFocused: Bool
-    /// The text that the InputField displays.
-    @Binding var text: String
-    /// A boolean value that determines if the presented InputField should use secure entry, commonly used for passwords.
-    ///
-    /// This property is set to false by default. Setting this property to true will set the InputField to use a SecureField instead which disables the user’s ability to copy the text in the view and, in some cases, also disables the user’s ability to record and broadcast the text in the view.
-    @State var isSecure: Bool = false
-    /// A boolean value that determines whether the currently displayed SecureField has visible text.
-    ///
-    /// This property is set to true by default. Setting this property to false will enable the user to see the current text of the InputField.
-    @State var isTextHidden: Bool = true
-    /// A custom enum (TextEntryStates) which sets the
-    @State var inputFieldState: InputFieldStates = .unselected
-    
-    // Other properties
-    /// A UInt16 value that determines the maximum characters allowed for input.
-    ///
-    /// This property is set to 0 by default. This will cause the InputField not to  trigger any other states than the selected and unselected states.
-    var maxLength: UInt16 = 0
-    /// A string that displays the title for the InputField, helpful for explaining what the InputField below is used for.
-    ///
-    /// This property is optional in case there isn't a need for a title. By not supplying a title, the top row will not be rendered.
-    var title: String?
-    /// A string that is displayed as the prompt message for the InputField, helpful for explaining any restrictions that may apply.
-    var promptString: String?
-    /// A string that is displayed as the error message for the InputField, helpful for explaining that the user has made an input that is not allowed.
-    var errorString: String?
-    /// A string value that can be to give the user a suggestion on what an input should look like.
-    ///
-    /// This property has the default value of an empty string as the constructor for TextField/Securefield needs a string.
-    var placeholder: String = ""
+    /// A float value representing the scaling factor when used for accessibility.
+    @ScaledMetric var scale: CGFloat = 1
+    /// The view-model responsible for handling all of the data in the view.
+    @StateObject private var viewModel: InputFieldViewModel
+
+    init(model: InputFieldModel) {
+         _viewModel = StateObject(wrappedValue: InputFieldViewModel(model: model))
+     }
     
     var body: some View {
         VStack {
-            setupTopStack(title: title)
+            setupTopStack(title: viewModel.model.title)
             setupInputFields()
-            setupBottomStack(prompt: promptString)
+            setupBottomStack(prompt: viewModel.model.promptString)
         }
     }
     
@@ -76,14 +53,12 @@ struct InputField: View {
             determineInputField()
                 .focused($isFocused)
                 .onChange(of: isFocused) { focus in
-                    if !(inputFieldState == .error) && !(inputFieldState == .success)  {
-                        self.inputFieldState = focus ? .selected : .unselected
-                    }
+                    viewModel.adjustStateOnFocusChange(focus: focus)
                 }
-                .onChange(of: text) { _ in
-                    verifyInput()
+                .onChange(of: viewModel.model.text) { text in
+                    viewModel.validateString(text)
                 }
-                .frame(maxWidth: .infinity, maxHeight: 26 * scale)
+                .frame(maxWidth: .infinity, maxHeight: 26 * scale) // minheight
                 .padding(EdgeInsets(top: 11, leading: 8, bottom: 11, trailing: 8))
                 .font(.bodyL)
                 .textFieldStyle(.plain)
@@ -91,7 +66,7 @@ struct InputField: View {
                 .foregroundColor(.textAndIcon1)
                 .overlay(
                     RoundedRectangle(cornerRadius: 4)
-                        .stroke(self.inputFieldState.borderColor, lineWidth: isFocused ? 2 : 1)
+                        .stroke(viewModel.model.inputFieldState.borderColor, lineWidth: isFocused ? 2 : 1)
                 )
         }
         .padding(.bottom, 4)
@@ -99,19 +74,19 @@ struct InputField: View {
     
     private func determineInputField() -> some View {
         Group {
-            if isSecure {
+            if viewModel.model.isSecure {
                 HStack {
-                    if isTextHidden {
-                        SecureField(placeholder, text: $text)
+                    if viewModel.model.isTextHidden {
+                        SecureField(viewModel.model.placeholder, text: $viewModel.model.text)
                             .accessibilityIdentifier("password")
                     } else {
-                        TextField(placeholder, text: $text)
+                        TextField(viewModel.model.placeholder, text: $viewModel.model.text)
                             .accessibilityIdentifier("visiblePassword")
                     }
                     Button(action: {
-                        self.isTextHidden.toggle()
+                        viewModel.model.isTextHidden.toggle()
                     }, label: {
-                        Image(isTextHidden ? "eye" : "eye.slash")
+                        Image(viewModel.model.isTextHidden ? "eye" : "eye.slash")
                             .renderingMode(.template)
                             .foregroundColor(.textAndIcon1)
                     })
@@ -119,7 +94,7 @@ struct InputField: View {
                 }
                 
             } else {
-                TextField(placeholder, text: $text)
+                TextField(viewModel.model.placeholder, text: $viewModel.model.text)
                     .accessibilityIdentifier("username")
             }
         }
@@ -131,25 +106,24 @@ struct InputField: View {
     ///  - Parameter prompt (Optional): The prompt message for the bottom-left view in the InputField.
     ///
     /// - Returns: An assembled HStack containing a prompt (if there is one) and a character counter if the maxLength property has a positive value.
-    
-    @ScaledMetric var scale: CGFloat = 1
     private func setupBottomStack(prompt: String?) -> some View {
         HStack(alignment: .center, spacing: 0) {
-            if let prompt = promptString {
+            if let prompt = viewModel.model.promptString {
                 
                 Label {
-                    Text(inputFieldState.promptMessage(prompt, maxLength: maxLength))
+                    Text(viewModel.getPromptMessage(prompt: prompt))
                         .font(.bodyS)
-                        .foregroundColor(inputFieldState.promptColor)
+                        .foregroundColor(viewModel.model.inputFieldState.promptColor)
                 } icon: {
-                    if inputFieldState != .selected  && !(inputFieldState.promptImageString.isEmpty) {
+                    if viewModel.model.inputFieldState != .selected  &&
+                        viewModel.model.inputFieldState != .unselected {
                         ZStack(alignment: .center) {
                             
                             Circle()
-                                .fill(inputFieldState.promptColor)
+                                .fill(viewModel.model.inputFieldState.promptColor)
                                 .frame(width: 16 * scale, height: 16 * scale)
                                 .padding(2)
-                            Image(inputFieldState.promptImageString)
+                            Image(viewModel.model.inputFieldState.promptImageString)
                                 .resizable()
                                 .renderingMode(.template)
                                 .foregroundColor(.textAndIcon5)
@@ -160,50 +134,26 @@ struct InputField: View {
                 }
             }
             Spacer()
-            if maxLength > 0  && text.count < maxLength {
-                Text("\(text.count)/\(maxLength)")
+            if viewModel.isCharacterCountBelowLimit() {
+                Text(viewModel.getCharacterCountOverTotal())
                     .accessibilityIdentifier("counter")
                     .font(.bodyS)
                     .foregroundColor(.textAndIcon3)
             }
         }
     }
-    
-    /// Default verification for the InputField.
-    ///
-    /// Triggers different states depending on the input count compared to the maxLength provided (default is 0).
-    private func verifyInput() {
-        guard maxLength > 0 else {
-            return
-        }
-        if text.contains("^[a-zA-Z]*$") {
-            inputFieldState = .error
-        }
-        
-        if text.count < maxLength {
-            inputFieldState = isFocused ? .selected : .unselected
-        }
-        
-        if text.count > maxLength {
-            inputFieldState = .error
-        }
-        
-        if text.count == maxLength {
-            inputFieldState = .success
-        }
-    }
 }
 
 
 
-struct InputPreview: View {
-    @State private var text: String = ""
-    @State private var pass: String = ""
-    
+struct InputPreview: View {    
+    private var usernameModel = InputFieldModel(text: "", title: "Username")
+    private var passModel = InputFieldModel(text: "", isSecure: true, maxLength: 8, title: "Pin", promptString: "Only numeric input allowed")
+
     var body: some View {
         VStack {
-            InputField(text: $text, title: "Username")
-            InputField(text: $pass, isSecure: true, maxLength: 10, title: "Pin", promptString: "Only numeric input allowed")
+            InputField(model: usernameModel)
+            InputField(model: passModel)
             Spacer()
         }
         .padding(30)
@@ -229,9 +179,35 @@ struct InputField_Previews: PreviewProvider {
     }
 }
 
+enum ValidationError: Error {
+    case char, long, short
+    
+    func validation(string: String) -> String {
+        if string.contains("Chars") {
+            return ValidationError.char.message
+        } else if string.count < 10 {
+            return ValidationError.short.message
+        } else if string.count > 10 {
+            return ValidationError.long.message
+        }
+        return ""
+    }
+    
+    var message: String {
+        switch self {
+        case .char:
+            return "The input contains illegal input"
+        case .long:
+            return "The input is too long"
+        case .short:
+            return "short"
+        }
+    }
+}
+
 
 /// Enum defining different states for the input field.
-enum InputFieldStates {
+enum InputFieldStates: Equatable {
     /// Represents the unselected state.
     case unselected
     /// Represents the selected state.
